@@ -19,5 +19,5 @@ spring:
     locations: classpath:db/migration
 
 jwt:
-  secret: ${JWT_SECRET:ChangeThisSecretToAStrongOne}
+  secret: ${JWT_SECRET:XzQ7Bz5LJ9i6t8mN7yNp9tA+38oZTt7Zb7VcF5w4zQqE4Z1eHhXb+J7rSc+vQ8Qp}
   expirationMs: ${JWT_EXPIRATION_MS:3600000}

@@ -6,6 +6,8 @@ import com.project.crud.entity.Role;
 import com.project.crud.entity.User;
 import com.project.crud.repository.UserRepository;
 import com.project.crud.security.JwtUtils;
+import com.project.crud.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +24,8 @@ public class AuthController {
     private final AuthenticationManager authManager;
     private final JwtUtils jwtUtils;
     private final UserRepository userRepo;
+    @Autowired
+    private UserService userService;
 
     public AuthController(AuthenticationManager authManager, JwtUtils jwtUtils, UserRepository userRepo) {
         this.authManager = authManager; this.jwtUtils = jwtUtils; this.userRepo = userRepo;
@@ -44,6 +48,6 @@ public class AuthController {
         if (userRepo.existsByEmail(u.getEmail())) throw new RuntimeException("email exists");
         if (u.getRoles() == null || u.getRoles().isEmpty()) u.setRoles(Set.of(Role.ROLE_USER));
         // password will be encoded by service on creation (or we can call service here)
-        return userRepo.save(u);
+        return userService.create(u);
     }
 }

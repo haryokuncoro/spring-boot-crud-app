@@ -102,7 +102,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: root
       JWT_SECRET: XzQ7Bz5LJ9i6t8mN7yNp9tA+38oZTt7Zb7VcF5w4zQqE4Z1eHhXb+J7rSc+vQ8Qp
     ports:
-      - "8081:8080"  # Host port → akses Swagger/UI di browser
+      - "8080:8080"  # Host port → akses Swagger/UI di browser
 
 networks:
   app-network:
@@ -163,7 +163,7 @@ docker logs -f spring-boot-crud
 Buka browser:
 
 ```
-http://localhost:8081/swagger-ui/index.html
+http://localhost:8080/swagger-ui/index.html
 ```
 
 * Sekarang bisa langsung tes semua endpoint API

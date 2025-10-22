@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0.33
+    container_name: mysql-db-spring-boot-crud
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: userdb
+    ports:
+      - "3308:3306"  # bisa diakses dari host
+    volumes:
+      - mysql-data-spring-boot-crud:/var/lib/mysql
+
+  app:
+    build: .
+    image: spring-boot-crud:latest
+    container_name: spring-boot-crud
+    depends_on:
+      - mysql
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db-spring-boot-crud:3306/userdb
+      JWT_SECRET: XzQ7Bz5LJ9i6t8mN7yNp9tA+38oZTt7Zb7VcF5w4zQqE4Z1eHhXb+J7rSc+vQ8Qp
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql-data-spring-boot-crud:

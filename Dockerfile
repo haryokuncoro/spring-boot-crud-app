@@ -1,13 +1,11 @@
-# Gunakan Java 17 slim runtime
-FROM openjdk:17-jdk-slim
-
+# Stage 1: build jar
+FROM gradle:7.6-jdk17 AS build
 WORKDIR /app
+COPY . .
+RUN gradle clean bootJar
 
-# Copy jar hasil build
-COPY build/libs/app.jar app.jar
-
-# Expose port Spring Boot
-EXPOSE 8080
-
-# Jalankan dengan profile docker
-ENTRYPOINT ["java","-jar","/app/app.jar","--spring.profiles.active=docker"]
+# Stage 2: runtime image
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
+ENTRYPOINT ["java","-jar","/app/app.jar"]

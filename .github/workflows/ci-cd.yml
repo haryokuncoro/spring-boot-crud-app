@@ -7,14 +7,14 @@ on:
   pull_request:
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     env:
       IMAGE_NAME: haryokuncoro/spring-boot-crud
 
     steps:
-      # 1️⃣ Checkout kode
+      # 1️⃣ Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -36,34 +36,25 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 4️⃣ Build jar
+      # 4️⃣ Build Spring Boot jar
       - name: Build Spring Boot jar
         run: ./gradlew clean bootJar
 
-      # 5️⃣ Log in Docker Hub
+      # 5️⃣ Verify jar exists
+      - name: List built jar
+        run: ls -l build/libs/
+
+      # 6️⃣ Log in Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 6️⃣ Build Docker image
+      # 7️⃣ Build multi-stage Docker image (jar pasti ada)
       - name: Build Docker image
         run: docker build -t $IMAGE_NAME:latest .
 
-      # 7️⃣ Push Docker image
+      # 8️⃣ Push Docker image
       - name: Push Docker image
         run: docker push $IMAGE_NAME:latest
-
-      # 8️⃣ Deploy (opsional: jalankan docker-compose di server)
-      # Untuk deploy otomatis ke server sendiri, bisa pakai SSH
-      #- name: Deploy to server
-      #  uses: appleboy/ssh-action@v0.1.6
-      #  with:
-      #    host: ${{ secrets.SERVER_HOST }}
-      #    username: ${{ secrets.SERVER_USER }}
-      #    key: ${{ secrets.SERVER_SSH_KEY }}
-      #    script: |
-      #      cd /path/to/project
-      #      docker compose pull
-      #      docker compose up -d
